@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
@@ -13,7 +14,7 @@ export class StocksComponent implements OnInit, OnDestroy {
   stockPickerForm: FormGroup;
   symbol: string;
   period: string;
-  subs: Subscription;
+  private subs: Subscription
   from;
   to;
   today;
@@ -65,7 +66,6 @@ export class StocksComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.subs = this.stockPickerForm.valueChanges.subscribe(x => this.fetchQuote(this));
   }
 
