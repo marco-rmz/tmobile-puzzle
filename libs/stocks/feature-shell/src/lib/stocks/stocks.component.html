@@ -1,5 +1,18 @@
 <form [formGroup]="stockPickerForm">
   <mat-form-field>
+    <input matInput [matDatepicker]="picker_from" readonly placeholder="From" [max] = "today" [value]="from"
+    formControlName="from"  (dateChange)="changeDate('change', $event)">
+    <mat-datepicker-toggle matSuffix [for]="picker_from"></mat-datepicker-toggle>
+    <mat-datepicker #picker_from></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker_to" readonly placeholder="To" [max] = "today" formControlName="to" [value]="to"  (dateChange)="changeDate('change', $event)">
+    <mat-datepicker-toggle matSuffix [for]="picker_to"></mat-datepicker-toggle>
+    <mat-datepicker #picker_to></mat-datepicker>
+  </mat-form-field>
+  
+  <mat-form-field>
     <input
       matInput
       placeholder="Symbol e.g AAPL"
@@ -16,18 +29,6 @@
       >
     </mat-error>
   </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Favorite time period</mat-label>
-    <mat-select formControlName="period">
-      <mat-option
-        *ngFor="let timePeriod of timePeriods"
-        [value]="timePeriod.value"
-      >
-        {{ timePeriod.viewValue }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
 </form>
 
-<coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+<coding-challenge-chart [data$]="quotes$" [startDate$]="from" [endDate$]="to"></coding-challenge-chart>
