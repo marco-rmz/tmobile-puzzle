@@ -43,8 +43,18 @@ A proxy has been set up in `stocks` to proxy calls to `locahost:3333` which is t
 Please provide a short code review of the base `master` branch:
 
 1. What is done well?
+    - The components made them modular with the ideology of recycling code, it seems good practice
+    - I liked the implementation of typescript in the backend, it makes the structure cleaner and easy to understand.
+    - The implementation of modern testing tools such as Cypress is very innovative
+    - It seems good practice to work with lazy load components.
+    - The way they handle the configuration files through a service seems very clean to me, I usually call the configuration files directly.
 2. What would you change?
+    - I would change the folder structure, I suggest more insolation when designing the components, remember that the advantages of dividing your code in front-end and back-end is that you can manage them independently.
+    - Place the components that I will reuse in the application within the structure of the app (front-end)
 3. Are there any code smells or problematic implementations?
+    - The libraries are outdated which causes them to have vulnerabilities.
+    - The API (Backend) is included within the structure of the app (frontend), if we would like to divide them to serve them in different places, for example, serve the backend through an EC2 with API-Gateway and the front in a bucket s3 (services of AWS), it would have to be restructured and reworked
+    - The chart library was not working correctly due to the incorrect declaration of a variable in the template.
 
 > Make a PR to fix at least one of the issues that you identify
 
