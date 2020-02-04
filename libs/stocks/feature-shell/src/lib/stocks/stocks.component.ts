@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'coding-challenge-stocks',
   templateUrl: './stocks.component.html',
   styleUrls: ['./stocks.component.css']
 })
-export class StocksComponent implements OnInit {
+export class StocksComponent implements OnInit, OnDestroy {
   stockPickerForm: FormGroup;
   symbol: string;
   period: string;
+  private subs: Subscription
   from;
   to;
   today;
@@ -51,7 +54,7 @@ export class StocksComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stockPickerForm.valueChanges.subscribe(x => this.fetchQuote(this));
+    this.subs = this.stockPickerForm.valueChanges.subscribe(x => this.fetchQuote(this));
   }
 
   fetchQuote(value) {
@@ -59,5 +62,9 @@ export class StocksComponent implements OnInit {
       const { symbol } = this.stockPickerForm.value;
       this.priceQuery.fetchQuote(symbol, this.period);
     }
+  }
+
+  ngOnDestroy(){
+    this.subs.unsubscribe();
   }
 }
