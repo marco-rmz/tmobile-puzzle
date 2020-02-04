@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'coding-challenge-stocks',
   templateUrl: './stocks.component.html',
   styleUrls: ['./stocks.component.css']
 })
-export class StocksComponent implements OnInit {
+export class StocksComponent implements OnInit, OnDestroy {
   stockPickerForm: FormGroup;
   symbol: string;
   period: string;
+  subs: Subscription;
   from;
   to;
   today;
+  error:any={isError:false,errorMessage:''};
 
   quotes$ = this.priceQuery.priceQueries$;
 
@@ -38,20 +41,32 @@ export class StocksComponent implements OnInit {
     this.from  = amonthago
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      to: [],
-      from: []
+      to: [null, Validators.required],
+      from: [null, Validators.required]
     });
+
+    this.stockPickerForm.controls['to'].setValue(this.to);
+    this.stockPickerForm.controls['from'].setValue(this.from);
   }
 
   changeDate(type: string, event: MatDatepickerInputEvent<Date>) {
-    if(this.to.value < this.from.value){
-      this.stockPickerForm.controls['to'].setValue(this.from.value)
-      this.to = new FormControl(this.from.value)
+
+    this.to = this.stockPickerForm.controls['to'].value;
+    this.from = this.stockPickerForm.controls['from'].value;
+
+    if(this.to < this.from){
+      this.stockPickerForm.controls['to'].setValue(null)
+      this.error={isError:true,errorMessage:"End Date can't before start date"};
+    }else{
+      this.error = {isError:false,errorMessage:''}
     }
+
+
   }
 
   ngOnInit() {
-    this.stockPickerForm.valueChanges.subscribe(x => this.fetchQuote(this));
+
+    this.subs = this.stockPickerForm.valueChanges.subscribe(x => this.fetchQuote(this));
   }
 
   fetchQuote(value) {
@@ -59,5 +74,9 @@ export class StocksComponent implements OnInit {
       const { symbol } = this.stockPickerForm.value;
       this.priceQuery.fetchQuote(symbol, this.period);
     }
+  }
+
+  ngOnDestroy(){
+    this.subs.unsubscribe();
   }
 }

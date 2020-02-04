@@ -1,15 +1,23 @@
 <form [formGroup]="stockPickerForm">
   <mat-form-field>
-    <input matInput [matDatepicker]="picker_from" readonly placeholder="From" [max] = "today" [value]="from"
+    <input matInput [matDatepicker]="picker_from" readonly placeholder="From" [max] = "today" 
     formControlName="from"  (dateChange)="changeDate('change', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker_from"></mat-datepicker-toggle>
     <mat-datepicker #picker_from></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput [matDatepicker]="picker_to" readonly placeholder="To" [max] = "today" formControlName="to" [value]="to"  (dateChange)="changeDate('change', $event)">
+    <input matInput [matDatepicker]="picker_to" readonly placeholder="To" [max] = "today" formControlName="to"   (dateChange)="changeDate('change', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker_to"></mat-datepicker-toggle>
-    <mat-datepicker #picker_to></mat-datepicker>
+    <mat-datepicker #picker_to></mat-datepicker>    
+    <mat-error
+    ><span
+      *ngIf="
+        error.isError
+      "
+      >{{error.errorMessage}}</span
+    >
+    </mat-error>
   </mat-form-field>
   
   <mat-form-field>

@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'coding-challenge-chart',
@@ -17,7 +18,6 @@ export class ChartComponent implements OnInit {
   @Input() startDate$;
   @Input() endDate$;
   chartData: any;
-
   chart: {
     title: string;
     type: string;
@@ -37,8 +37,11 @@ export class ChartComponent implements OnInit {
     };
 
     this.data$.subscribe(newData => {
-      newData = newData.filter((d)=> new Date(d[0]) > new Date(this.startDate$) && new Date(d[0]) < new Date(this.endDate$))
-      return this.chartData = newData
+      let filterData = newData.filter((d)=> {
+        const date = moment(d[0])
+        return date.isSameOrAfter(moment(this.startDate$)) && date.isSameOrBefore(moment(this.endDate$))
+      })
+      return this.chartData = filterData
     });
   }
 }
